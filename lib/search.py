@@ -29,8 +29,13 @@ def export_results_to_json(results, filename='search_results.json'):
 
 
 def search_google(query: str):
+    """
+    Search the web for a query and return the results in JSON format.
+    """
     google_api_key = os.environ.get('GOOGLE_API_KEY')
     google_cse_id = os.environ.get('GOOGLE_CSE_ID')
+
+    print(f"Searching for {query}")
 
     results = get_search_results(
         query, google_api_key, google_cse_id, num=5)
