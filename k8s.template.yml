@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myswarm-config
+# data:
+#   # Add any environment variables needed by your script
+#   # For example, if you have API keys or other secrets in .env:
+#   # API_KEY: "your-api-key"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myswarm-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myswarm
+  template:
+    metadata:
+      labels:
+        app: myswarm
+    spec:
+      containers:
+      - name: myswarm
+        image: 408545242574.dkr.ecr.us-east-2.amazonaws.com/myswarm:latest
+        # command: ["/bin/sh", "-c"]
+        # command: ["python3 /app/lib/app.py"]
+        envFrom:
+        - configMapRef:
+            name: myswarm-config
+        resources:
+          requests:
+            cpu: "100m" # The container requests 100 millicores of CPU (0.1 cores or 10% of a single core).
+            memory: "128Mi" # The container requests 128 megabytes of memory.
+          limits:
+            cpu: "500m" # The container limits its CPU usage to 500 millicores (0.5 cores or 50% of a single core).
+            memory: "512Mi" # The container limits its memory usage to 512 megabytes. 

@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myswarm-config
+# data:
+#   Add your environment variables here
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myswarm-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myswarm
+  template:
+    metadata:
+      labels:
+        app: myswarm
+    spec:
+      containers:
+      - name: myswarm
+        image: myswarm:latest # Update image to local registry
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: myswarm-config
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
